@@ -22,8 +22,8 @@ apt update && apt install -y wget git python3 python3-venv libgl1 libglib2.0-0 g
 cd /opt && git clone https://github.com/lsuhpchelp/stable-diffusion-webui.git
 
 # Add user (WebUI installation does not run with root)
-adduser --disabled-password --gecos '' loni && chown -R loni stable-diffusion-webui && su - loni
+#adduser --disabled-password --gecos '' loni && chown -R loni stable-diffusion-webui
 
 # Installation
-su - loni
-cd /opt/stable-diffusion-webui && ./webui.sh --skip-torch-cuda-test
+#export USER=loni && whoami
+cd /opt/stable-diffusion-webui && ./webui.sh -f --skip-torch-cuda-test
