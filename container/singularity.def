@@ -25,5 +25,5 @@ cd /opt && git clone https://github.com/lsuhpchelp/stable-diffusion-webui.git
 #adduser --disabled-password --gecos '' loni && chown -R loni stable-diffusion-webui
 
 # Installation
-#export USER=loni && whoami
-cd /opt/stable-diffusion-webui && ./webui.sh -f --skip-torch-cuda-test
+cd /opt/stable-diffusion-webui
+mkdir config_states && ./webui.sh -f --skip-torch-cuda-test --no-download-sd-model --exit

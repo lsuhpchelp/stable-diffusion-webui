@@ -1,33 +1,23 @@
-FROM pytorch/pytorch:2.6.0-cuda12.4-cudnn9-runtime
+FROM ubuntu:22.04
 
 MAINTAINER Jason Li <jasonli3@lsu.edu>
 
-LABEL    software="PyTorch" \ 
-    base_image="pytorch/pytorch:2.6.0-cuda12.4-cudnn9-runtime" \ 
-    container="PyTorch" \ 
-    about.summary="PyTorch framework for deep learning, with GPU support, QT support, commonly used Python modules such as jupyter." \ 
+LABEL    software="Stable Diffusion WebUI" \ 
+    about.summary="Stable Diffusion web UI, containerized version tuned for LSU / LONI HPC" \ 
     about.home="https://pytorch.org/" \ 
-    software.version="2.6.0"
+    software.version="1.10.1"
 
-RUN apt update
-RUN apt install -y qtbase5-dev qt5-qmake libmpich-dev && apt clean
-RUN pip install matplotlib \
-                pyqt5 \
-                jupyterlab \
-                Cython \
-                dask \
-                nltk \
-                mpi4py \
-                numba \
-                numexpr \
-                pandas \
-                regex \
-                seaborn \
-                scikit-image \
-                scikit-learn \
-                scikit-learn-intelex \
-                scipy \
-                statsmodels \
-                sympy \
-                tqdm  &&  pip cache purge
-                
+# Install dependencies
+RUN apt update && apt install -y wget git python3 python3-venv libgl1 libglib2.0-0 google-perftools bc && apt clean
+
+# Clone repository
+WORKDIR /opt
+RUN git clone https://github.com/lsuhpchelp/stable-diffusion-webui.git
+
+# Add user (WebUI installation does not run with root)
+RUN adduser --disabled-password --gecos '' loni && chown -R loni stable-diffusion-webui
+USER loni
+
+# Installation
+WORKDIR /opt/stable-diffusion-webui
+RUN mkdir config_states && ./webui.sh --skip-torch-cuda-test --no-download-sd-model --exit
